@@ -648,6 +648,38 @@ document.addEventListener('onDropdownOpened', function(e)
 	}
 });
 
+document.addEventListener('onStayInTouchClicked', function(e) 
+{
+	var menuItems = document.getElementsByClassName("_3z3lc")[0].getElementsByClassName("_3cfBY ");
+	var reactMenuItems = FindReact(document.getElementsByClassName("_2hHc6")[0])[0].props.children;
+	var markAsReadButton = null;
+	var props = null;
+	for (var i=0;i<reactMenuItems.length;i++)
+	{
+		if (reactMenuItems[i] == null) continue;
+
+		if (reactMenuItems[i].key == ".$mark_unread")
+		{
+			markAsReadButton = menuItems[i];
+			props = reactMenuItems[i].props;
+			break;
+		}
+	}
+	if (props != null)
+	{
+		var name = props.chat.name;
+		var formattedName = props.chat.contact.formattedName;
+		var jid = props.chat.id;
+		var lastMessageIndex = props.chat.lastReceivedKey.id;
+		var unreadCount = props.chat.unreadCount;
+		var isGroup = props.chat.isGroup;
+		var fromMe = props.chat.lastReceivedKey.fromMe;
+
+		var data = {name: name, formattedName: formattedName, jid: jid, lastMessageIndex: lastMessageIndex, fromMe: fromMe, unreadCount: unreadCount, isGroup: isGroup};
+		document.dispatchEvent(new CustomEvent('onOpenStayInTouchDialog', {detail: JSON.stringify(data)}));	
+	}
+});
+
 document.addEventListener('sendReadConfirmation', function(e)
 {
 	var data = JSON.parse(e.detail);

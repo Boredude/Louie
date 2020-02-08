@@ -30,6 +30,8 @@ else
 					}
 					else if (addedNode.nodeName.toLowerCase() == "div" && addedNode.classList.contains("_2hHc6"))
 					{
+						addStayInTouchOption();
+						
 						setTimeout(function() 
 						{
 							document.dispatchEvent(new CustomEvent('onDropdownOpened', {}));
@@ -58,6 +60,34 @@ function onMainUIReady()
 	// if the menu itme is gone somehow after a short period of time (e.g because the layout changes from right-to-left) add it again
     setTimeout(addIconIfNeeded, 500);
     setTimeout(addIconIfNeeded, 1000);
+}
+
+
+function addStayInTouchOption() {
+	// get menu items
+	var menuItems = document.getElementsByClassName("_3z3lc")[0].getElementsByClassName("_3cfBY ");
+	// get first menu item
+	var firstMenuItem = menuItems[0];
+	// copy it
+	var stayInTouchMenuItem = firstMenuItem.cloneNode(true);
+	// edit it
+	stayInTouchMenuItem.style = "opacity: 1";
+	stayInTouchMenuItem.innerHTML = '<div class="_3zy-4 Sl-9e" role="button" title="Stay in touch">Stay in touch</div>';
+	// add hover behavior
+	stayInTouchMenuItem.addEventListener('mouseenter', function (e) {
+		stayInTouchMenuItem.classList.add('_3VXiW');
+	});
+	stayInTouchMenuItem.addEventListener('mouseleave', function () {
+		stayInTouchMenuItem.classList.remove('_3VXiW');
+	});
+	// add click behavior
+	stayInTouchMenuItem.addEventListener('click', function () {
+		// dispatch event
+		document.dispatchEvent(new CustomEvent('onStayInTouchClicked', {}));
+	});
+
+	// add to UI
+	firstMenuItem.parentNode.insertBefore(stayInTouchMenuItem, firstMenuItem);
 }
 
 function addIconIfNeeded() 
@@ -168,6 +198,57 @@ function addIconIfNeeded()
 		});
 	}
 }
+
+
+document.addEventListener('onOpenStayInTouchDialog', function(e) 
+{
+	// get menu items
+	var menuItems = document.getElementsByClassName("_3z3lc")[0].getElementsByClassName("_3cfBY ");
+	// get first menu item
+	var stayInTouchMenuItem = menuItems[0];
+	// parse data
+	var data = JSON.parse(e.detail);
+	// send message
+	chrome.runtime.sendMessage({ name: "getOptions" }, function (options) 
+	{
+		var dropContent = " \
+					<div class='incognito-options-container' dir='ltr'> \
+						<div class='incognito-options-title'>with " + data.formattedName + "</div> \
+						<div id='incognito-safety-delay-option-panel' style='margin-top: 15px;'> \
+							<div style='margin-top: 10px'> \
+								<div id='incognito-option-enable-safety-delay' style='display: flex; align-items: center; margin-left: 20px;'> \
+									Every \
+									<input id='incognito-option-safety-delay' type='number' class='seconds-incognito-input' min='1' max='30' \
+									step='1' placeholder='5' style='margin: 0 10px' /> \
+									<select id='frequency' style='max-width: 80px;'> \
+										<option value='day'>day/s</option> \
+										<option value='week'>week/s</option> \
+										<option value='month'>month/s</option> \
+									</select> \
+								</div> \
+							</div> \
+						</div> \
+						<button type='button' onclick='alert('Hello world!')'>Stay in touch!</button> \
+					</div>";
+						
+		var drop = new Drop(
+		{
+			target: stayInTouchMenuItem,
+			content: dropContent,
+			position: "bottom left",
+			classes: "drop-theme-incognito",
+			openOn: "click",
+			tetherOptions: 
+			{
+				offset: "-4px -4px 0 0"
+			},
+		});
+
+		drop.open();
+	});
+});
+
+
 
 document.addEventListener('onMarkAsReadClick', function(e) 
 {
