@@ -202,10 +202,6 @@ function addIconIfNeeded()
 
 document.addEventListener('onOpenStayInTouchDialog', function(e) 
 {
-	// get menu items
-	var menuItems = document.getElementsByClassName("_3z3lc")[0].getElementsByClassName("_3cfBY ");
-	// get first menu item
-	var stayInTouchMenuItem = menuItems[0];
 	// parse data
 	var data = JSON.parse(e.detail);
 	// send message
@@ -217,7 +213,6 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 			stickyFooter: false,
 			closeMethods: ['overlay', 'button', 'escape'],
 			closeLabel: "Close",
-			cssClass: ['custom-class-1', 'custom-class-2'],
 			onOpen: function() {
 				console.log('modal open');
 			},
@@ -234,17 +229,28 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 
 		// set content
 		modal.setContent(
-			'<h1 style="font-size: 26px; font-weight: 600;">Stay in touch with ' + data.formattedName + '</h1> \
-				<div style="display: flex; align-items: center; margin: 20px 0;"> \
-					<input type="number" name="quantity" min="1" max="30" step="1">  \
-					<span style="margin: 0 10px;">time/s a </span> \
-					<select id="frequency" style="max-width: 100px;"> \
-						<option value="day">day</option> \
-						<option value="week">week</option> \
-						<option value="year">year</option> \
-					</select> \
-				</div> \
-			');
+			'<h1 class="dialog-header">Stay in touch with ' + data.formattedName + '</h1> \
+			<div class="option-container"> \
+				<label for="never" class="radio"> \
+					<input type="radio" name="rdo" id="never" class="hidden"/> \
+					<span class="label"></span> \
+					<span class="disabled">Never</span> \
+				</label> \
+				<label for="every" class="radio"> \
+					<input type="radio" name="rdo" id="every" class="hidden"/> \
+					<span class="label"></span> \
+					<div> \
+						<input type="number" name="quantity" min="1" max="30" step="1" value="1" /> \
+						<span class="space-left-right">time/s a </span> \
+						<select id="frequency"> \
+							<option value="day">day</option> \
+							<option value="week" selected="selected">week</option> \
+							<option value="year">year</option> \
+						</select> \
+					</div> \
+				</label> \
+			</div> \
+		');
 
 		// add a button
 		modal.addFooterBtn('Save', 'tingle-btn tingle-btn--primary', function() {
