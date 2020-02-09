@@ -211,40 +211,55 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 	// send message
 	chrome.runtime.sendMessage({ name: "getOptions" }, function (options) 
 	{
-		var dropContent = " \
-					<div class='incognito-options-container' dir='ltr'> \
-						<div class='incognito-options-title'>with " + data.formattedName + "</div> \
-						<div id='incognito-safety-delay-option-panel' style='margin-top: 15px;'> \
-							<div style='margin-top: 10px'> \
-								<div id='incognito-option-enable-safety-delay' style='display: flex; align-items: center; margin-left: 20px;'> \
-									Every \
-									<input id='incognito-option-safety-delay' type='number' class='seconds-incognito-input' min='1' max='30' \
-									step='1' placeholder='5' style='margin: 0 10px' /> \
-									<select id='frequency' style='max-width: 80px;'> \
-										<option value='day'>day/s</option> \
-										<option value='week'>week/s</option> \
-										<option value='month'>month/s</option> \
-									</select> \
-								</div> \
-							</div> \
-						</div> \
-						<button type='button' onclick='alert('Hello world!')'>Stay in touch!</button> \
-					</div>";
-						
-		var drop = new Drop(
-		{
-			target: stayInTouchMenuItem,
-			content: dropContent,
-			position: "bottom left",
-			classes: "drop-theme-incognito",
-			openOn: "click",
-			tetherOptions: 
-			{
-				offset: "-4px -4px 0 0"
+		// instanciate new modal
+		var modal = new tingle.modal({
+			footer: true,
+			stickyFooter: false,
+			closeMethods: ['overlay', 'button', 'escape'],
+			closeLabel: "Close",
+			cssClass: ['custom-class-1', 'custom-class-2'],
+			onOpen: function() {
+				console.log('modal open');
 			},
+			onClose: function() {
+				console.log('modal closed');
+			},
+			beforeClose: function() {
+				// here's goes some logic
+				// e.g. save content before closing the modal
+				return true; // close the modal
+				return false; // nothing happens
+			}
 		});
 
-		drop.open();
+		// set content
+		modal.setContent(
+			'<h1 style="font-size: 26px; font-weight: 600;">Stay in touch with ' + data.formattedName + '</h1> \
+				<div style="display: flex; align-items: center; margin: 20px 0;"> \
+					<input type="number" name="quantity" min="1" max="30" step="1">  \
+					<span style="margin: 0 10px;">time/s a </span> \
+					<select id="frequency" style="max-width: 100px;"> \
+						<option value="day">day</option> \
+						<option value="week">week</option> \
+						<option value="year">year</option> \
+					</select> \
+				</div> \
+			');
+
+		// add a button
+		modal.addFooterBtn('Save', 'tingle-btn tingle-btn--primary', function() {
+			// here goes some logic
+			modal.close();
+		});
+
+		// add another button
+		modal.addFooterBtn('Cancel', 'tingle-btn tingle-btn--danger', function() {
+			// here goes some logic
+			modal.close();
+		});
+
+		// open modal
+		modal.open();
 	});
 });
 

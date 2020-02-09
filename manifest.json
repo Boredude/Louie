@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "WAIncognito",
-  "short_name": "WhatsIncognito",
-   "description": "Be invisible on WhatsApp™ Web by disabling read receipts and presence updates",
+  "name": "Louis - Stay In Touch",
+  "short_name": "Louis",
+   "description": "Louis helps you stay in touch with your friends on Whatsapp",
   "version": "1.5.6",
   "permissions": [ ],
    "icons": 
@@ -26,9 +26,9 @@
 	},
 	{
 	  "matches": ["https://web.whatsapp.com/*"],
-	  "js": ["core/UI.js", "lib/drop/drop.js", "lib/sweetalert/sweetalert.min.js"],
-	  "css": ["styles.css", "lib/drop/css/drop-theme-basic.css", "lib/sweetalert/sweetalert.css"]
+	  "js": ["core/UI.js", "lib/tingle/tingle.min.js", "lib/drop/drop.js", "lib/sweetalert/sweetalert.min.js"],
+	  "css": ["styles.css", "lib/tingle/tingle.min.css", "lib/drop/css/drop-theme-basic.css", "lib/sweetalert/sweetalert.css"]
 	}
    ],
-	"web_accessible_resources": ["lib/drop/drop.js", "lib/sweetalert/sweetalert.min.js", "core/*", "images/*" ]
+	"web_accessible_resources": ["lib/tingle/tingle.min.js", "lib/drop/drop.js", "lib/sweetalert/sweetalert.min.js", "core/*", "images/*" ]
 }
