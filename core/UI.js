@@ -250,30 +250,8 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 			}
 		});
 
-		// set content
-		modal.setContent(
-			'<h1 class="dialog-header">Stay in touch with ' + data.formattedName + '</h1> \
-			<div class="option-container"> \
-				<label for="never" class="radio"> \
-					<input type="radio" name="rdo" id="never" class="hidden"/> \
-					<span class="label"></span> \
-					<span id="never-caption">Never</span> \
-				</label> \
-				<label for="every" class="radio"> \
-					<input type="radio" name="rdo" id="every" class="hidden"/> \
-					<span class="label"></span> \
-					<div> \
-						<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="1" /> \
-						<span id="time" class="space-left-right">time/s a </span> \
-						<select id="frequency"> \
-							<option value="day">day</option> \
-							<option value="week" selected="selected">week</option> \
-							<option value="year">year</option> \
-						</select> \
-					</div> \
-				</label> \
-			</div> \
-		');
+		const content = buildStayInTouchDialogContent(data, options);
+		modal.setContent(content);
 
 		// add a button
 		modal.addFooterBtn('Save', 'tingle-btn tingle-btn--primary', function() {
@@ -346,6 +324,74 @@ document.addEventListener('onMarkAsReadClick', function(e)
 		}
 	});
 });
+
+function buildStayInTouchDialogContent(data, options) {
+		// set content
+		let content = ' \
+		    <h1 class="dialog-header">Stay in touch with ' + data.formattedName + '</h1> \
+			<div class="option-container"> \
+				<label for="never" class="radio"> \
+					<input type="radio" name="rdo" id="never" class="hidden"/> \
+					<span class="label"></span> \
+					<span id="never-caption">Never</span> \
+				</label> \
+				<label for="every" class="radio">';
+
+		// if we already have schedule for this chat
+		if (data.formattedName in options) {
+			// add content
+			content += ' \
+					<input type="radio" name="rdo" id="every" class="hidden" checked/> \
+					<span class="label"></span> \
+					<div> \
+						<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="' + options[data.formattedName].schedule.quantity + '" /> \
+						<span id="time" class="space-left-right">time/s a </span> \
+						<select id="frequency">';
+			// if frequency is day
+			if (options[data.formattedName].schedule.frequency === 'day' ) {
+				content += '<option value="day" selected="selected">day</option>';
+			} else {
+				content += '<option value="day">day</option>';
+			}
+			// if frequency is week
+			if (options[data.formattedName].schedule.frequency === 'week' ) {
+				content += '<option value="week" selected="selected">week</option>';
+			} else {
+				content += '<option value="week">week</option>';
+			}
+			// if frequency is year
+			if (options[data.formattedName].schedule.frequency === 'year' ) {
+				content += '<option value="year" selected="selected">year</option>';
+			} else {
+				content += '<option value="year">year</option>';
+			}
+			// add end of select
+			content += ' \
+						</select> \
+					</div>';
+		} else {
+			content += ' \
+			<input type="radio" name="rdo" id="every" class="hidden" /> \
+			<span class="label"></span> \
+			<div> \
+				<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="1" /> \
+				<span id="time" class="space-left-right">time/s a </span> \
+				<select id="frequency"> \
+					<option value="day">day</option> \
+					<option value="week" selected="selected">week</option> \
+					<option value="year">year</option> \
+				</select> \
+			</div>';
+		}
+
+		// add end of content
+		content += ' \
+				</label> \
+			</div> \
+		';
+
+		return content;
+}
 
 function onReadConfirmaionsTick()
 {
