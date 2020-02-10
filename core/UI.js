@@ -207,6 +207,9 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 	// send message
 	chrome.runtime.sendMessage({ name: "getOptions" }, function (options) 
 	{
+		const onEveryChecked = () => console.log('every');
+		const onNeverChecked = () => console.log('never');
+
 		// instanciate new modal
 		var modal = new tingle.modal({
 			footer: true,
@@ -215,9 +218,14 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 			closeLabel: "Close",
 			onOpen: function() {
 				console.log('modal open');
+				// listen to radio button click
+				document.getElementById("never").addEventListener("click", onNeverChecked);
+				document.getElementById("every").addEventListener("click", onEveryChecked);
 			},
 			onClose: function() {
 				console.log('modal closed');
+				document.getElementById("never").removeEventListener("click", onNeverChecked);
+				document.getElementById("every").removeEventListener("click", onEveryChecked);
 			},
 			beforeClose: function() {
 				// here's goes some logic
