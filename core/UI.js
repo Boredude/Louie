@@ -228,7 +228,7 @@ document.addEventListener('onChatsRecieved', function(e)
 				const last = chats[jid].t * 1000;
 				const now = new Date().getTime();
 				const schedule = contacts[jid].schedule;
-				// calculate urguncy
+				// calculate urgency
 				calculateStayInTouchUrgency(last, now, schedule);
 			}
 		}
@@ -363,7 +363,7 @@ document.addEventListener('onMarkAsReadClick', function(e)
 });
 
 /*
- *	Calculate the urguncy to stay in touch with the contact
+ *	Calculate the urgency to stay in touch with the contact
  *
  * 	if we passed the requested time by 10 days, return urgent
  * 	if we passed the requested time by less than 10 days
@@ -447,8 +447,8 @@ function buildStayInTouchDialogContent(data, contacts) {
 				<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="1" /> \
 				<span id="time" class="space-left-right">time/s a </span> \
 				<select id="frequency"> \
-					<option value="week">week</option> \
-					<option value="month" selected="selected">month</option> \
+					<option value="week" selected="selected">week</option> \
+					<option value="month">month</option> \
 					<option value="year">year</option> \
 				</select> \
 			</div>';
