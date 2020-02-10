@@ -260,16 +260,16 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 			const never = document.getElementById("never");
 			const every = document.getElementById("every");
 			// if never was selected and we previously have value for this chat
-			if (never.checked && data.formattedName in options) {
+			if (never.checked && data.jid in options) {
 				// clear if from options
-				delete options[data.formattedName];
+				delete options[data.jid];
 			// if a schedule was chosen
 			} else if (every.checked) {
 				// extract values 
 				const quantity = document.getElementById("quantity").value;
 				const frequency = select.options[select.selectedIndex].value;
 				// set data in options
-				options[data.formattedName] = {
+				options[data.jid] = {
 					...data,
 					schedule: {
 						quantity,
@@ -338,7 +338,7 @@ function buildStayInTouchDialogContent(data, options) {
 				<label for="every" class="radio">';
 
 		// if we already have schedule for this chat
-		if (data.formattedName in options) {
+		if (data.jid in options) {
 			// add content
 			content += ' \
 					<input type="radio" name="rdo" id="every" class="hidden" checked/> \
@@ -348,19 +348,19 @@ function buildStayInTouchDialogContent(data, options) {
 						<span id="time" class="space-left-right">time/s a </span> \
 						<select id="frequency">';
 			// if frequency is day
-			if (options[data.formattedName].schedule.frequency === 'day' ) {
+			if (options[data.jid].schedule.frequency === 'day' ) {
 				content += '<option value="day" selected="selected">day</option>';
 			} else {
 				content += '<option value="day">day</option>';
 			}
 			// if frequency is week
-			if (options[data.formattedName].schedule.frequency === 'week' ) {
+			if (options[data.jid].schedule.frequency === 'week' ) {
 				content += '<option value="week" selected="selected">week</option>';
 			} else {
 				content += '<option value="week">week</option>';
 			}
 			// if frequency is year
-			if (options[data.formattedName].schedule.frequency === 'year' ) {
+			if (options[data.jid].schedule.frequency === 'year' ) {
 				content += '<option value="year" selected="selected">year</option>';
 			} else {
 				content += '<option value="year">year</option>';

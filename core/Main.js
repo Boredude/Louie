@@ -221,6 +221,24 @@ var NodeHandler = {};
 
 	NodeHandler.handleReceivedNode = function(e)
 	{
+		// look for original (not duplicated) message containing whatsapp chats
+		if ("response" === nodeReader.tag(e) && 
+			"chat" === nodeReader.attr("type", e) &&
+			!nodeReader.attr('duplicate', e)) {
+			// Found it
+			console.log('[In] recieved chats')
+			console.log(e);
+			// read children
+			const children = nodeReader.children(e);
+			// skip if not an array
+			if (Array.isArray(children)) {
+				// parse chats
+				const chats = children.map(chlid => nodeReader.attrs(chlid));
+				// dispatch event
+				document.dispatchEvent(new CustomEvent('onChatsRecieved', {detail: JSON.stringify(chats)}));
+			}
+		}
+
 		var messages = [], o = nodeReader.children(e);
 		if ("response" === nodeReader.tag(e) && ("message" === nodeReader.attr("type", e) || "star" === nodeReader.attr("type", e) 
 			|| "search" === nodeReader.attr("type", e) || "media_message" === nodeReader.attr("type", e))) 
