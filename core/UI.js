@@ -207,8 +207,23 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 	// send message
 	chrome.runtime.sendMessage({ name: "getOptions" }, function (options) 
 	{
-		const onEveryChecked = () => console.log('every');
-		const onNeverChecked = () => console.log('never');
+		// set options if undefined
+		options = options || {};
+		// define click handlers
+		const onEveryChecked = () => {
+			// disable "Never" caption
+			document.getElementById("never-caption").setAttribute("class", "disabled");
+			document.getElementById("time").setAttribute("class", "space-left-right");
+			document.getElementById("quantity").removeAttribute("disabled");
+			document.getElementById("frequency").removeAttribute("disabled");
+		};
+		const onNeverChecked = () => {
+			// disable "Every" inputs
+			document.getElementById("never-caption").removeAttribute("class");
+			document.getElementById("time").setAttribute("class", "space-left-right disabled");
+			document.getElementById("quantity").setAttribute("disabled", "disabled");
+			document.getElementById("frequency").setAttribute("disabled", "disabled");
+		};
 
 		// instanciate new modal
 		var modal = new tingle.modal({
@@ -242,14 +257,14 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 				<label for="never" class="radio"> \
 					<input type="radio" name="rdo" id="never" class="hidden"/> \
 					<span class="label"></span> \
-					<span class="disabled">Never</span> \
+					<span id="never-caption">Never</span> \
 				</label> \
 				<label for="every" class="radio"> \
 					<input type="radio" name="rdo" id="every" class="hidden"/> \
 					<span class="label"></span> \
 					<div> \
-						<input type="number" name="quantity" min="1" max="30" step="1" value="1" /> \
-						<span class="space-left-right">time/s a </span> \
+						<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="1" /> \
+						<span id="time" class="space-left-right">time/s a </span> \
 						<select id="frequency"> \
 							<option value="day">day</option> \
 							<option value="week" selected="selected">week</option> \
@@ -262,8 +277,37 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 
 		// add a button
 		modal.addFooterBtn('Save', 'tingle-btn tingle-btn--primary', function() {
-			// here goes some logic
-			modal.close();
+			// extract select component
+			const select = document.getElementById("frequency");
+			const never = document.getElementById("never");
+			const every = document.getElementById("every");
+			// if never was selected and we previously have value for this chat
+			if (never.checked && data.formattedName in options) {
+				// clear if from options
+				delete options[data.formattedName];
+			// if a schedule was chosen
+			} else if (every.checked) {
+				// extract values 
+				const quantity = document.getElementById("quantity").value;
+				const frequency = select.options[select.selectedIndex].value;
+				// set data in options
+				options[data.formattedName] = {
+					...data,
+					schedule: {
+						quantity,
+						frequency
+					}
+				};
+			}
+
+			// if either one of them was chosen
+			if (every.checked || never.checked) {
+				// setOptions
+				chrome.runtime.sendMessage({ name: "setOptions", options }, () => {
+					// close modal
+					modal.close();
+				});
+			}
 		});
 
 		// add another button
