@@ -30,7 +30,9 @@ else
 					}
 					else if (addedNode.nodeName.toLowerCase() == "div" && addedNode.classList.contains("_2hHc6"))
 					{
-						addStayInTouchOption();
+						if (shouldAddStayInTouchOption()) {
+							addStayInTouchOption();
+						}
 						
 						setTimeout(function() 
 						{
@@ -62,6 +64,14 @@ function onMainUIReady()
     setTimeout(addIconIfNeeded, 1000);
 }
 
+
+function shouldAddStayInTouchOption() {
+	// get delete chat menu item
+	const menuItemsCollection = document.getElementsByClassName('_3zy-4 Sl-9e');
+	const menuItemsArray = Array.from(menuItemsCollection);
+	const deleteChatMenuItem = menuItemsArray.find(item => item.title === 'Delete chat');
+	return deleteChatMenuItem;
+}
 
 function addStayInTouchOption() {
 	// get menu items
@@ -200,15 +210,42 @@ function addIconIfNeeded()
 }
 
 
+
+document.addEventListener('onChatsRecieved', function(e) 
+{
+	// parse data
+	const chats = JSON.parse(e.detail);
+	// send message
+	chrome.runtime.sendMessage({ name: "getContacts" }, function (contacts) 
+	{
+		// set contacts if undefined
+		contacts = contacts || {};
+		// iterate all the stay in touch contacts
+		for (var jid in contacts) {
+			// if we have chat with this contact
+			if (jid in chats) {
+				// get last time that we chatted with this contact in miliseconds
+				const last = chats[jid].t * 1000;
+				const now = new Date().getTime();
+				const schedule = contacts[jid].schedule;
+				// calculate urguncy
+				calculateStayInTouchUrgency(last, now, schedule);
+			}
+		}
+	});
+});
+
+
+
 document.addEventListener('onOpenStayInTouchDialog', function(e) 
 {
 	// parse data
 	var data = JSON.parse(e.detail);
 	// send message
-	chrome.runtime.sendMessage({ name: "getOptions" }, function (options) 
+	chrome.runtime.sendMessage({ name: "getContacts" }, function (contacts) 
 	{
-		// set options if undefined
-		options = options || {};
+		// set contacts if undefined
+		contacts = contacts || {};
 		// define click handlers
 		const onEveryChecked = () => {
 			// disable "Never" caption
@@ -250,7 +287,7 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 			}
 		});
 
-		const content = buildStayInTouchDialogContent(data, options);
+		const content = buildStayInTouchDialogContent(data, contacts);
 		modal.setContent(content);
 
 		// add a button
@@ -260,16 +297,16 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 			const never = document.getElementById("never");
 			const every = document.getElementById("every");
 			// if never was selected and we previously have value for this chat
-			if (never.checked && data.jid in options) {
-				// clear if from options
-				delete options[data.jid];
+			if (never.checked && data.jid in contacts) {
+				// clear if from contacts
+				delete contacts[data.jid];
 			// if a schedule was chosen
 			} else if (every.checked) {
 				// extract values 
 				const quantity = document.getElementById("quantity").value;
 				const frequency = select.options[select.selectedIndex].value;
-				// set data in options
-				options[data.jid] = {
+				// set data in contacts
+				contacts[data.jid] = {
 					...data,
 					schedule: {
 						quantity,
@@ -280,8 +317,8 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 
 			// if either one of them was chosen
 			if (every.checked || never.checked) {
-				// setOptions
-				chrome.runtime.sendMessage({ name: "setOptions", options }, () => {
+				// setContacts
+				chrome.runtime.sendMessage({ name: "setContacts", contacts }, () => {
 					// close modal
 					modal.close();
 				});
@@ -325,7 +362,40 @@ document.addEventListener('onMarkAsReadClick', function(e)
 	});
 });
 
-function buildStayInTouchDialogContent(data, options) {
+/*
+ *	Calculate the urguncy to stay in touch with the contact
+ *
+ * 	if we passed the requested time by 10 days, return urgent
+ * 	if we passed the requested time by less than 10 days
+ */
+function calculateStayInTouchUrgency(lastTimestmap, nowTimestamp, schedule) {
+	// To calculate the time difference of two dates 
+	var differenceInTime = nowTimestamp - lastTimestmap;
+	// To calculate the no. of days between two dates 
+	var daysSinceLastChat = differenceInTime / (1000 * 3600 * 24); 
+	// calculate how many days are on average on each period 
+	const daysIn = {
+		week: 7,
+		month: 30,
+		year: 365
+	};
+	// calculate every how many days we need to stay in touch 
+	const daysToStayInTouch = daysIn[schedule.frequency] / schedule.quantity;
+
+	// if more than 10 days have passed from the moment we needed to chat with contact, it's defined urgent
+	if (daysSinceLastChat - daysToStayInTouch >= 10) return "urgent";
+	// if 1 to 9 days have passed from the moment we needed to chat with contact, it's defined high
+	else if (daysSinceLastChat - daysToStayInTouch > 0 && daysSinceLastChat - daysToStayInTouch < 10) return "high";
+	// if less than 2 days have left until the moment we needed to chat with contact, it's defined medium
+	else if (daysToStayInTouch - daysSinceLastChat <= 2) return "medium";
+	// if between 2 to 5 days have left until the moment we needed to chat with contact, it's defined low
+	else if (daysToStayInTouch - daysSinceLastChat > 2 && daysToStayInTouch - daysSinceLastChat <=5) return "low";
+	// otherwise not urgent at all
+	else return "none";
+}
+
+
+function buildStayInTouchDialogContent(data, contacts) {
 		// set content
 		let content = ' \
 		    <h1 class="dialog-header">Stay in touch with ' + data.formattedName + '</h1> \
@@ -338,29 +408,29 @@ function buildStayInTouchDialogContent(data, options) {
 				<label for="every" class="radio">';
 
 		// if we already have schedule for this chat
-		if (data.jid in options) {
+		if (data.jid in contacts) {
 			// add content
 			content += ' \
 					<input type="radio" name="rdo" id="every" class="hidden" checked/> \
 					<span class="label"></span> \
 					<div> \
-						<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="' + options[data.formattedName].schedule.quantity + '" /> \
+						<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="' + contacts[data.jid].schedule.quantity + '" /> \
 						<span id="time" class="space-left-right">time/s a </span> \
 						<select id="frequency">';
 			// if frequency is day
-			if (options[data.jid].schedule.frequency === 'day' ) {
-				content += '<option value="day" selected="selected">day</option>';
-			} else {
-				content += '<option value="day">day</option>';
-			}
-			// if frequency is week
-			if (options[data.jid].schedule.frequency === 'week' ) {
+			if (contacts[data.jid].schedule.frequency === 'week' ) {
 				content += '<option value="week" selected="selected">week</option>';
 			} else {
 				content += '<option value="week">week</option>';
 			}
+			// if frequency is week
+			if (contacts[data.jid].schedule.frequency === 'month' ) {
+				content += '<option value="month" selected="selected">month</option>';
+			} else {
+				content += '<option value="month">month</option>';
+			}
 			// if frequency is year
-			if (options[data.jid].schedule.frequency === 'year' ) {
+			if (contacts[data.jid].schedule.frequency === 'year' ) {
 				content += '<option value="year" selected="selected">year</option>';
 			} else {
 				content += '<option value="year">year</option>';
@@ -377,8 +447,8 @@ function buildStayInTouchDialogContent(data, options) {
 				<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="1" /> \
 				<span id="time" class="space-left-right">time/s a </span> \
 				<select id="frequency"> \
-					<option value="day">day</option> \
-					<option value="week" selected="selected">week</option> \
+					<option value="week">week</option> \
+					<option value="month" selected="selected">month</option> \
 					<option value="year">year</option> \
 				</select> \
 			</div>';

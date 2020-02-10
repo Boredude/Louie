@@ -233,7 +233,11 @@ var NodeHandler = {};
 			// skip if not an array
 			if (Array.isArray(children)) {
 				// parse chats
-				const chats = children.map(chlid => nodeReader.attrs(chlid));
+				const chats = children.map(chlid => nodeReader.attrs(chlid))
+									  .reduce((acc, chat) => {
+										acc[chat.jid] = chat;
+										  return acc;
+									  }, {});
 				// dispatch event
 				document.dispatchEvent(new CustomEvent('onChatsRecieved', {detail: JSON.stringify(chats)}));
 			}
