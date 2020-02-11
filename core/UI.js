@@ -116,100 +116,49 @@ function addIconIfNeeded()
 		menuItemElem.appendChild(iconElem);
 		firstMenuItem.parentElement.insertBefore(menuItemElem, firstMenuItem);
 		
-		
-		chrome.runtime.sendMessage({ name: "getUrgencies" }, function (urgencies) 
+		const dropContent = buildStayInTouchDropdownContent(window.urgencies);
+					
+		var drop = new Drop(
 		{
-			debugger;
-			/*
-			document.dispatchEvent(new CustomEvent('onOptionsUpdate', 
+			target: menuItemElem,
+			content: dropContent,
+			position: "bottom left",
+			classes: "dropdown-theme",
+			openOn: "click",
+			tetherOptions: 
 			{
-				detail: JSON.stringify(options)
-			}));
-	
-			var dropContent = " \
-					<div class='incognito-options-container' dir='ltr'> \
-						<div class='incognito-options-title'>Incognito options</div> \
-						<div class='incognito-options-item'> \
-							<div id='incognito-option-read-confirmations' style='cursor: pointer !important; margin-bottom: 10px'> \
-								<div class='checkbox-container _3wpnE' style='display:inline !important;'> \
-									<div class='checkbox checkbox-incognito " + (options.readConfirmationsHook ? "checked _1Zo-R _15wNI'> <div class='checkmark _1ygtt _3zTzS'> </div>" :
-									 "unchecked _1Zo-R'> <div class='checkmark _1ygtt _31Di_'> </div>") + "\
-									</div> \
-								</div> \
-								Don't send read confirmations \
-								<div class='incognito-options-description'>Messages that their read confirmation was blocked will be<p> marked in red instead of green.</div> \
-							</div> \
-							<div id='incognito-safety-delay-option-panel' style='margin-left: 25px !important; margin-top: 15px; font-size: 12px;'> \
-								Send after safety delay: <br> \
-								<div style='margin-top: 10px'> \
-									<div id='incognito-option-disable-safety-delay' style='display: inline-block;' > \
-										<input id='incognito-radio-disable-safety-delay' type='radio' class='radio-input' "
-										 + (options.safetyDelay <= 0 ? "checked" : "") + " /> \
-										Never \
-									</div> \
-									<div id='incognito-option-enable-safety-delay' style='display: inline-block; margin-left: 20px;'> \
-										<input id='incognito-radio-enable-safety-delay' type='radio' class='radio-input' name='example' " 
-										+ (options.safetyDelay > 0 ? "checked" : "") + "/> \
-										After <input id='incognito-option-safety-delay' type='number' class='seconds-incognito-input' min='1' max='30' \
-										step='1' placeholder='5' " + (options.safetyDelay <= 0 ? "disabled" : "") + " " 
-										+ (options.safetyDelay > 0 ? "value='" + options.safetyDelay + "'" : "") +"/> seconds \
-									</div> \
-								</div> \
-							</div> \
-						</div> \
-						<div id='incognito-option-presence-updates' class='incognito-options-item' style='cursor: pointer;'> \
-							<div class='checkbox-container _3wpnE' style='display:inline !important'> \
-									<div class='checkbox checkbox-incognito " + (options.presenceUpdatesHook ? "checked _1Zo-R _15wNI'> <div class='checkmark _1ygtt _3zTzS'> </div>" : 
-									"unchecked _1Zo-R'> <div class='checkmark _1ygtt _31Di_'> </div>") + "\
-								</div> \
-							</div> \
-							Don't send \"Last Seen\" updates \
-							<div class='incognito-options-description'>Blocks outgoing presence updates.</div> \
-						</div> \
-					</div>";
-						
-			var drop = new Drop(
-			{
-				target: menuItemElem,
-				content: dropContent,
-				position: "bottom left",
-				classes: "drop-theme-incognito",
-				openOn: "click",
-				tetherOptions: 
-				{
-					offset: "-4px -4px 0 0"
-				},
-			});
-			var originalCloseFunction = drop.close;
-			drop.close = function()
-			{
-				document.dispatchEvent(new CustomEvent('onIncognitoOptionsClosed', {detail: null}));
-				setTimeout(function() {originalCloseFunction.apply(drop, arguments); }, 100);
-			}
-			drop.on("open", function()
-			{
-				if (!checkInterception()) return;
-				document.getElementsByClassName("menu-item-incognito")[0].setAttribute("class", "_3j8Pd GPmgf active menu-item-incognito");
+				offset: "-4px -4px 0 0"
+			},
+		});
+		var originalCloseFunction = drop.close;
+		drop.close = function()
+		{
+			//document.dispatchEvent(new CustomEvent('onIncognitoOptionsClosed', {detail: null}));
+			setTimeout(function() {originalCloseFunction.apply(drop, arguments); }, 100);
+		}
+		drop.on("open", function()
+		{
+			if (!checkInterception()) return;
+			
+			// document.getElementsByClassName("menu-item-incognito")[0].setAttribute("class", "_3j8Pd GPmgf active menu-item-incognito");
 
-				document.getElementById("incognito-option-read-confirmations").addEventListener("click", onReadConfirmaionsTick);
-				document.getElementById("incognito-option-presence-updates").addEventListener("click", onPresenseUpdatesTick);
-				document.getElementById("incognito-option-safety-delay").addEventListener("input", onSafetyDelayChanged);
-				document.getElementById("incognito-option-safety-delay").addEventListener("keypress", isNumberKey);
-				document.getElementById("incognito-radio-enable-safety-delay").addEventListener("click", onSafetyDelayEnabled);
-				document.getElementById("incognito-radio-disable-safety-delay").addEventListener("click", onSafetyDelayDisabled);
-				
-				document.dispatchEvent(new CustomEvent('onIncognitoOptionsOpened', {detail: null}));
-			});
-			drop.on("close", function()
-			{
-				document.getElementsByClassName("menu-item-incognito")[0].setAttribute("class", "_3j8Pd menu-item-incognito");
+			// document.getElementById("incognito-option-read-confirmations").addEventListener("click", onReadConfirmaionsTick);
+			// document.getElementById("incognito-option-presence-updates").addEventListener("click", onPresenseUpdatesTick);
+			// document.getElementById("incognito-option-safety-delay").addEventListener("input", onSafetyDelayChanged);
+			// document.getElementById("incognito-option-safety-delay").addEventListener("keypress", isNumberKey);
+			// document.getElementById("incognito-radio-enable-safety-delay").addEventListener("click", onSafetyDelayEnabled);
+			// document.getElementById("incognito-radio-disable-safety-delay").addEventListener("click", onSafetyDelayDisabled);
+			
+			// document.dispatchEvent(new CustomEvent('onIncognitoOptionsOpened', {detail: null}));
+		});
+		drop.on("close", function()
+		{
+			// document.getElementsByClassName("menu-item-incognito")[0].setAttribute("class", "_3j8Pd menu-item-incognito");
 
-				document.getElementById("incognito-option-read-confirmations").removeEventListener("click", onReadConfirmaionsTick);
-				document.getElementById("incognito-option-presence-updates").removeEventListener("click", onPresenseUpdatesTick);
-				document.getElementById("incognito-radio-enable-safety-delay").removeEventListener("click", onSafetyDelayEnabled);
-				document.getElementById("incognito-radio-disable-safety-delay").removeEventListener("click", onSafetyDelayDisabled);
-			});
-			*/
+			// document.getElementById("incognito-option-read-confirmations").removeEventListener("click", onReadConfirmaionsTick);
+			// document.getElementById("incognito-option-presence-updates").removeEventListener("click", onPresenseUpdatesTick);
+			// document.getElementById("incognito-radio-enable-safety-delay").removeEventListener("click", onSafetyDelayEnabled);
+			// document.getElementById("incognito-radio-disable-safety-delay").removeEventListener("click", onSafetyDelayDisabled);
 		});
 	}
 }
@@ -247,8 +196,9 @@ document.addEventListener('onChatsRecieved', function(e)
 				}
 			}
 		}
-		// save urgencies
-		chrome.runtime.sendMessage({ name: "setUrgencies", urgencies }, () => {}); 
+
+		// set urgencies on global window object
+		window.urgencies = urgencies;
 	});
 });
 
@@ -415,6 +365,27 @@ function calculateStayInTouchUrgency(lastTimestmap, nowTimestamp, schedule) {
 	else return "none";
 }
 
+
+function buildStayInTouchDropdownContent(urgencies) {
+	
+	let content = ' \
+	<div class="louis-dropdown-container"> \
+		<ul class="louis-dropdown-list">';
+
+	// iterate through the urgencies
+	for (urgency in urgencies) {
+		// foreach contacts in the urgency
+		for (contact of urgencies[urgency]) {
+			// add li to content
+			content += `<li class="louis-dropdown-item _3zy-4 Sl-9e urgency_${urgency}">${contact.formattedName}</li>`;
+		}
+	}
+	
+	content += '</ul> \
+	</div>';
+
+	return content;
+}
 
 function buildStayInTouchDialogContent(data, contacts) {
 		// set content
