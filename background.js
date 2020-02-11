@@ -16,6 +16,20 @@ function onMessage(messageEvent, sender, callback)
             // callback
             callback(result.contacts);
         });
+    } 
+    else if (messageEvent.name == "setUrgencies")
+    {
+        chrome.storage.sync.set({urgencies: messageEvent.urgencies}, function() {
+            // callback
+            callback();
+        });
+    }
+    else if (messageEvent.name == "getUrgencies")
+    {
+        chrome.storage.sync.get('urgencies', function(result) {
+            // callback
+            callback(result.urgencies);
+        });
     }
 
     return true; // Inform Chrome that we will make a delayed sendResponse

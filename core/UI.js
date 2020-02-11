@@ -108,6 +108,7 @@ function addIconIfNeeded()
 	if (firstMenuItem != undefined)
 	{
 		var menuItemElem = document.createElement("div");
+		menuItemElem.setAttribute("id", "louis-dropdown");
 		menuItemElem.setAttribute("class", "_3j8Pd menu-item-incognito");
 		var iconElem = document.createElement("button");
 		iconElem.setAttribute("class", "icon icon-incognito");
@@ -115,8 +116,11 @@ function addIconIfNeeded()
 		menuItemElem.appendChild(iconElem);
 		firstMenuItem.parentElement.insertBefore(menuItemElem, firstMenuItem);
 		
-		chrome.runtime.sendMessage({ name: "getOptions" }, function (options) 
+		
+		chrome.runtime.sendMessage({ name: "getUrgencies" }, function (urgencies) 
 		{
+			debugger;
+			/*
 			document.dispatchEvent(new CustomEvent('onOptionsUpdate', 
 			{
 				detail: JSON.stringify(options)
@@ -205,6 +209,7 @@ function addIconIfNeeded()
 				document.getElementById("incognito-radio-enable-safety-delay").removeEventListener("click", onSafetyDelayEnabled);
 				document.getElementById("incognito-radio-disable-safety-delay").removeEventListener("click", onSafetyDelayDisabled);
 			});
+			*/
 		});
 	}
 }
@@ -220,6 +225,7 @@ document.addEventListener('onChatsRecieved', function(e)
 	{
 		// set contacts if undefined
 		contacts = contacts || {};
+		const urgencies = {};
 		// iterate all the stay in touch contacts
 		for (var jid in contacts) {
 			// if we have chat with this contact
@@ -229,9 +235,20 @@ document.addEventListener('onChatsRecieved', function(e)
 				const now = new Date().getTime();
 				const schedule = contacts[jid].schedule;
 				// calculate urgency
-				calculateStayInTouchUrgency(last, now, schedule);
+				const urgency = calculateStayInTouchUrgency(last, now, schedule);
+				// if we urgency is other than none
+				if (urgency !== 'none') {
+					// init urguency if doesn't exist
+					if (!(urgency in urgencies)) {
+						urgencies[urgency] = [];
+					} 
+					// set urgency
+					urgencies[urgency].push(contacts[jid]);
+				}
 			}
 		}
+		// save urgencies
+		chrome.runtime.sendMessage({ name: "setUrgencies", urgencies }, () => {}); 
 	});
 });
 
@@ -362,11 +379,15 @@ document.addEventListener('onMarkAsReadClick', function(e)
 	});
 });
 
+
 /*
  *	Calculate the urgency to stay in touch with the contact
  *
  * 	if we passed the requested time by 10 days, return urgent
- * 	if we passed the requested time by less than 10 days
+ * 	if we passed the requested time by less than 10 days, return high
+ *  if less than 2 days left to the requested time, return medium
+ *  if between 2 to 5 days left to the requested time, return low
+ *  else return none
  */
 function calculateStayInTouchUrgency(lastTimestmap, nowTimestamp, schedule) {
 	// To calculate the time difference of two dates 
