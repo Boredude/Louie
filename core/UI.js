@@ -359,6 +359,15 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 				chrome.runtime.sendMessage({ name: "setContacts", contacts }, () => {
 					// close modal
 					modal.close();
+
+					setTimeout(() => {
+						// show toast
+						nativeToast({
+							message: 'changes saved',
+							edge: false,
+							debug: false
+						  })
+					}, 500);
 				});
 			}
 		});

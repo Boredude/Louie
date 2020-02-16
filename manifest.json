@@ -26,9 +26,9 @@
 	},
 	{
 	  "matches": ["https://web.whatsapp.com/*"],
-	  "js": ["core/UI.js", "lib/tingle/tingle.min.js", "lib/drop/drop.js", "lib/sweetalert/sweetalert.min.js"],
-	  "css": ["styles.css", "lib/tingle/tingle.min.css", "lib/drop/css/drop-theme-basic.css", "lib/sweetalert/sweetalert.css"]
+	  "js": ["core/UI.js", "lib/tingle/tingle.min.js", "lib/drop/drop.js", "lib/sweetalert/sweetalert.min.js", "lib/native-toast/native-toast.js"],
+	  "css": ["styles.css", "lib/tingle/tingle.min.css", "lib/drop/css/drop-theme-basic.css", "lib/sweetalert/sweetalert.css", "lib/native-toast/native-toast.css"]
 	}
    ],
-	"web_accessible_resources": ["lib/tingle/tingle.min.js", "lib/drop/drop.js", "lib/sweetalert/sweetalert.min.js", "core/*", "images/*" ]
+	"web_accessible_resources": ["lib/tingle/tingle.min.js", "lib/drop/drop.js", "lib/sweetalert/sweetalert.min.js", "lib/native-toast/native-toast.js",  "core/*", "images/*" ]
 }
