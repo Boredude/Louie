@@ -396,3 +396,104 @@ input[type="radio"]:checked + .label:after {
 .mat_list > li.hide {
   max-height: 0px;
 }
+
+
+
+
+
+
+
+
+
+ .container {
+  width: 400px;
+  font-size: 0;
+  box-shadow: 0 0 100px RGBa(0, 0, 0, 0.5);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.container input {
+  display: none;
+}
+.container input:checked + label {
+  background: #eee;
+}
+.container input#tab1:checked ~ .line {
+  left: 0%;
+}
+.container input#tab1:checked ~ .content-container #c1 {
+  opacity: 1;
+}
+.container input#tab2:checked ~ .line {
+  left: 50%;
+}
+.container input#tab2:checked ~ .content-container #c2 {
+  opacity: 1;
+}
+ 
+ .container label {
+  display: inline-block;
+  font-size: 16px;
+  height: 36px;
+  line-height: 36px;
+  width: 50%;
+  text-align: center;
+  background: #f4f4f4;
+  color: #555;
+  position: relative;
+  -webkit-transition: 0.25s background ease;
+  transition: 0.25s background ease;
+  cursor: pointer;
+}
+ .container label::after {
+  content: "";
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  display: block;
+  background: #ccc;
+  bottom: 0;
+  opacity: 0;
+  left: 0;
+  -webkit-transition: 0.25s ease;
+  transition: 0.25s ease;
+}
+ .container label:hover::after {
+  opacity: 1;
+}
+ .container .line {
+  position: absolute;
+  height: 2px;
+  background: #25D366;
+  width: 50%;
+  top: 34px;
+  left: 0;
+  -webkit-transition: 0.25s ease;
+  transition: 0.25s ease;
+}
+ .container .content-container {
+  background: #eee;
+  position: relative;
+  height: 100px;
+  font-size: 16px;
+}
+ .container .content-container .content {
+  position: absolute;
+  padding: 10px;
+  width: 100%;
+  top: 0;
+  opacity: 0;
+  -webkit-transition: 0.25s ease;
+  transition: 0.25s ease;
+  color: #333;
+}
+ .container .content-container .content h3 {
+  font-weight: 200;
+  margin: 10px 0;
+}
+ .container .content-container .content p {
+  margin: 10px 0;
+}
+ .container .content-container .content p,  .container .content-container .content i {
+  font-size: 13px;
+}

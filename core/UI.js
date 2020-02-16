@@ -398,10 +398,10 @@ function calculateStayInTouchUrgency(lastTimestmap, nowTimestamp, schedule) {
 
 function buildStayInTouchDropdownContent(urgencies) {
 	
-	let content = '<div class="louis-dropdown-container">';
+	let notificationContent = '<div class="louis-dropdown-container">';
 
 	if (urgencies && urgencies.count > 0) {
-		content += '<ul class="louis-dropdown-list">';
+		notificationContent += '<ul class="louis-dropdown-list">';
 
 		// iterate through the urgencies
 		for (urgency in urgencies) {
@@ -410,18 +410,38 @@ function buildStayInTouchDropdownContent(urgencies) {
 			// foreach contacts in the urgency
 			for (contact of urgencies[urgency]) {
 				// add li to content
-				content += `<li class="louis-dropdown-item _3zy-4 Sl-9e urgency_${urgency}">${contact.formattedName}</li>`;
+				notificationContent += `<li class="louis-dropdown-item _3zy-4 Sl-9e urgency_${urgency}">${contact.formattedName}</li>`;
 			}
 		}
 		
-		content += '</ul>';
+		notificationContent += '</ul>';
 	} else {
-		content += '<div id="all-caught-up">You are all caught up! :)</div>'
+		notificationContent += '<div id="all-caught-up">You are all caught up! :)</div>'
 	}
 
-	content += '</div>';
+	notificationContent += '</div>';
 
-	return content;
+	const contactsContent = "<h1>Hello</h1>";
+
+	return `
+	<div class="container">
+		<input type="radio" id="tab1" name="tab" checked>
+		<label for="tab1"><i class="fa fa-code"></i> Notifications</label>
+		<input type="radio" id="tab2" name="tab">
+		<label for="tab2"><i class="fa fa-history"></i> Contacts</label>
+		<div class="line"></div>
+		<div class="content-container">
+			<div class="content" id="c1">
+			<h3>Notifications</h3>
+				${notificationContent}
+			</div>
+			<div class="content" id="c2">
+			<h3>Contacts</h3>
+				${contactsContent}
+			</div>
+		</div> 
+	</div>
+	`;
 }
 
 function buildStayInTouchDialogContent(data, contacts) {
