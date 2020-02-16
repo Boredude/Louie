@@ -8,11 +8,11 @@
 
 .icon-incognito
 {
-    background-image: url(chrome-extension://__MSG_@@extension_id__/images/incognito_gray.svg) !important;
+  background-image: url(chrome-extension://__MSG_@@extension_id__/images/incognito_gray.svg) !important;
 	background-repeat: no-repeat;
-    background-position: 1px 1px !important;
-    background-size: 21px 21px !important;
-    cursor: pointer !important;
+  background-position: 1px 1px !important;
+  background-size: 21px 21px !important;
+  cursor: pointer !important;
 	width: 24px;
 	height: 24px;
 }
@@ -24,13 +24,14 @@
   font-size: 10px;
   background: lightslategrey;
   color: white;
-  padding: 3px;
+  padding: 4px;
   border-radius: 50px;
 }
 
 #all-caught-up {
   padding: 20px;
   font-size: 16px;
+  text-align: center;
 }
 
 .dropdown-theme.drop-element
@@ -52,19 +53,17 @@
 
 .louis-dropdown-container
 {
-    background-color: #fff !important;
-    padding: 9px 0 !important;
-    font-family: Roboto, sans-serif !important;
-    font-size: 14.5px !important;
-    color: #444 !important;
-    max-width: 500px !important;
-    border-radius: 3px !important;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26), 0 2px 10px 0 rgba(0, 0, 0, 0.16) !important;
 }
 
 .louis-dropdown-list {
-  max-height: 151px;
+  max-height: 120px;
   overflow: auto;
+}
+
+.louis-dropdown-item {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .louis-dropdown-item:hover {
@@ -438,7 +437,7 @@ input[type="radio"]:checked + .label:after {
   line-height: 36px;
   width: 50%;
   text-align: center;
-  background: #f4f4f4;
+  background: #eeeeee;
   color: #555;
   position: relative;
   -webkit-transition: 0.25s background ease;
@@ -474,7 +473,7 @@ input[type="radio"]:checked + .label:after {
  .container .content-container {
   background: #eee;
   position: relative;
-  height: 100px;
+  height: 137px;
   font-size: 16px;
 }
  .container .content-container .content {
@@ -496,4 +495,31 @@ input[type="radio"]:checked + .label:after {
 }
  .container .content-container .content p,  .container .content-container .content i {
   font-size: 13px;
+}
+
+.contact, .urgency {
+  padding-top: 0px !important;
+}
+
+.urgency_urgent, .urgency_high, .urgency_medium, .urgency_low {
+  padding: 3px 7px;
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.urgency_urgent {
+  background: red;
+}
+
+.urgency_high {
+  background: indianred;
+}
+
+.urgency_medium {
+  background: seagreen;
+}
+
+.urgency_low {
+  background: darkgray;
 }
