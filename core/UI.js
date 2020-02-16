@@ -134,7 +134,7 @@ function addStayInTouchOption() {
 
 function addIconIfNeeded() 
 {
-	if (document.getElementsByClassName("menu-item-incognito").length > 0) return; // already added
+	if (document.getElementsByClassName("menu-item-louis").length > 0) return; // already added
 	
 	// fetch contacts
 	chrome.runtime.sendMessage({ name: "getContacts" }, function (contacts) 
@@ -144,10 +144,10 @@ function addIconIfNeeded()
 		{
 			var menuItemElem = document.createElement("div");
 			menuItemElem.setAttribute("id", "louis-dropdown");
-			menuItemElem.setAttribute("class", "_3j8Pd menu-item-incognito");
+			menuItemElem.setAttribute("class", "_3j8Pd menu-item-louis");
 			
 			var iconElem = document.createElement("button");
-			iconElem.setAttribute("class", "icon icon-incognito");
+			iconElem.setAttribute("class", "icon icon-louis");
 			iconElem.setAttribute("title", "Stay in touch");
 			
 			// if we have urgencies 

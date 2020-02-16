@@ -1,12 +1,12 @@
 
 /* CSS Document */
 
-.menu-item-incognito
+.menu-item-louis
 {
     cursor: pointer !important;
 }
 
-.icon-incognito
+.icon-louis
 {
   background-image: url(chrome-extension://__MSG_@@extension_id__/images/incognito_gray.svg) !important;
 	background-repeat: no-repeat;
@@ -40,17 +40,6 @@
 	transform-origin: left top 0px;
 }
 
-.checkbox-incognito
-{
-    position: relative !important;
-    float: left !important;
-    width: 17px !important;
-    height: 16px !important;
-    margin-left: 1px !important;
-    margin-right: 7px !important;
-    top: -1px !important;
-}
-
 .louis-dropdown-container
 {
 }
@@ -68,132 +57,6 @@
 
 .louis-dropdown-item:hover {
   background-color: #f5f5f5;
-}
-
-.incognito-options-title
-{
-    height: 50px !important;
-    padding: 12.5px 24px 0 24px !important;
-    font-size: 20px !important;
-}
-
-.incognito-options-item
-{
-    padding: 12.5px 24px !important;
-}
-
-.incognito-options-item:hover
-{ 
-    background-color: #f4f4f4 !important;
-}
-
-.incognito-options-description
-{
-    padding-top: 10px !important;
-    padding-left: 25px !important;
-    font-size: 12px !important;
-    opacity: 0.8 !important;
-}
-
-.sweet-alert
-{
-	direction: ltr
-}
-
-.unread-count.incognito
-{
-	background-color: rgba(255,0,0,0.3) !important;
-}
-
-.P6z4j.incognito
-{
-	background-color: rgba(255,0,0,0.3) !important;
-}
-
-.unread-count.blinking
-{
-	-webkit-animation:blink normal 0.7s infinite ease-in-out;
-}
-
-.P6z4j.blinking
-{
-	-webkit-animation:blink normal 0.7s infinite ease-in-out;
-}
-
-.incognito-message
-{
-    position: relative;
-	font-size: 12px;
-	transform-origin: left top 0px;
-	text-transform: none !important;
-}
-
-.incognito-message.middle
-{
-	margin-bottom: 12px;
-	margin-top: 12px;
-}
-
-.incognito-cancel-button 
-{
-	display: inline; 
-	cursor: pointer;
-	margin-left: 10px;
-    box-sizing: border-box;
-    height: 19px;
-    min-width: 19px;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255,0,0,0.3);
-    color: rgb(255, 255, 255);
-    font-size: 12px;
-    font-weight: 500;
-    line-height: normal;
-    vertical-align: top;
-    padding: 0px 5px;
-    border-radius: 11px;
-}
-
-.incognito-cancel-button:hover
-{
-	background-color: rgba(255,0,0,1.0);
-}
-
-.incognito-send-button 
-{
-	display: inline; 
-	cursor: pointer;
-	margin-left: 10px;
-    box-sizing: border-box;
-    height: 23px;
-    min-width: 30px;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0,255,0,0.3);
-    color: rgb(255, 255, 255);
-    font-size: 12px;
-    font-weight: 500;
-    line-height: normal;
-    vertical-align: top;
-    padding: 0px 5px;
-    border-radius: 11px;
-}
-
-.incognito-send-button:hover
-{
-	background-color: rgba(0,255,0,0.6);
-}
-
-@keyframes blink {
-    0% {
-           background-color: rgba(9, 210, 97, 0.3)
-    }
-    50% {
-           background-color: rgba(9, 210, 97, 1.0)
-    }
-    100% {
-           background-color: rgba(9, 210, 97, 0.3)
-    }
 }
 
 @keyframes click-wave {
