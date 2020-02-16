@@ -352,33 +352,6 @@ document.addEventListener('onOpenStayInTouchDialog', function(e)
 	});
 });
 
-
-
-document.addEventListener('onMarkAsReadClick', function(e) 
-{
-	var data = JSON.parse(e.detail);
-	chrome.runtime.sendMessage({ name: "getOptions" }, function (options) 
-	{
-		if (options.readConfirmationsHook)
-		{
-			swal({
-			  title: "Mark as read?",
-			  text: data.formattedName + " will be able to tell you read the last " + (data.unreadCount > 1 ?  data.unreadCount + " messages." : " message."),
-			  type: "warning",
-			  showCancelButton: true,
-			  confirmButtonColor: "#DD6B55",
-			  confirmButtonText: "Yes, send receipt",
-			  closeOnConfirm: true
-			},
-			function(){
-			  document.dispatchEvent(new CustomEvent('sendReadConfirmation', {detail: JSON.stringify(data)}));
-			  //swal("Sent!", "Messages were marked as read", "success");
-			});
-		}
-	});
-});
-
-
 /*
  *	Calculate the urgency to stay in touch with the contact
  *
@@ -506,122 +479,14 @@ function buildStayInTouchDialogContent(data, contacts) {
 		return content;
 }
 
-function onReadConfirmaionsTick()
-{
-	var readConfirmationsHook = false;
-	var checkbox = document.querySelector("#incognito-option-read-confirmations .checkbox-incognito");
-    var checkboxClass = checkbox.getAttribute("class");
-	var checkmark = checkbox.firstElementChild;
-	var chekmarkClass = checkmark.getAttribute("class");
-    if (checkboxClass.indexOf("unchecked") > -1)
-    {
-        checkbox.setAttribute("class", checkboxClass.replace("unchecked", "checked") + " _15wNI");
-		checkmark.setAttribute("class", chekmarkClass.replace("_31Di_", "_3zTzS"));
-        readConfirmationsHook = true;
-    }
-    else
-    {
-        checkbox.setAttribute("class", checkboxClass.replace("checked", "unchecked").split("_15wNI").join(""));
-		checkmark.setAttribute("class", chekmarkClass.replace("_3zTzS", "_31Di_"));
-        readConfirmationsHook = false;
-		var redChats = document.getElementsByClassName("icon-meta unread-count incognito");
-		for (var i=0;i<redChats.length;i++)
-		{
-			redChats[i].className = 'icon-meta unread-count';
-		}
-    }
-    chrome.runtime.sendMessage({ name: "setOptions", readConfirmationsHook: readConfirmationsHook });
-	document.dispatchEvent(new CustomEvent('onOptionsUpdate', 
-	{
-        detail: JSON.stringify({readConfirmationsHook: readConfirmationsHook})
-    }));
-}
-
-function onPresenseUpdatesTick()
-{
-	var presenceUpdatesHook = false;
-	var checkbox = document.querySelector("#incognito-option-presence-updates .checkbox-incognito");
-    var checkboxClass = checkbox.getAttribute("class");
-	var checkmark = checkbox.firstElementChild;
-	var chekmarkClass = checkmark.getAttribute("class");
-    if (checkboxClass.indexOf("unchecked") > -1)
-    {
-        checkbox.setAttribute("class", checkboxClass.replace("unchecked", "checked") + " _15wNI");
-		checkmark.setAttribute("class", chekmarkClass.replace("_31Di_", "_3zTzS"));
-        presenceUpdatesHook = true;
-    }
-    else
-    {
-        checkbox.setAttribute("class", checkboxClass.replace("checked", "unchecked").split("_15wNI").join(""));
-		checkmark.setAttribute("class", chekmarkClass.replace("_3zTzS", "_31Di_"));
-        presenceUpdatesHook = false;
-    }
-    chrome.runtime.sendMessage({ name: "setOptions", presenceUpdatesHook: presenceUpdatesHook });
-	document.dispatchEvent(new CustomEvent('onOptionsUpdate', 
-	{
-        detail: JSON.stringify({presenceUpdatesHook: presenceUpdatesHook})
-    }));
-}
-
-function onSafetyDelayChanged(event)
-{
-	if (isSafetyDelayValid(event.srcElement.value))
-	{
-		var delay = parseInt(event.srcElement.value);
-		document.getElementById("incognito-option-safety-delay").disabled = false;
-		chrome.runtime.sendMessage({ name: "setOptions", safetyDelay: delay });
-		document.dispatchEvent(new CustomEvent('onOptionsUpdate', 
-		{
-			detail: JSON.stringify({safetyDelay: delay})
-		}));
-	}
-}
-
-function onSafetyDelayDisabled()
-{
-	document.getElementById("incognito-option-safety-delay").disabled = true;
-	document.getElementById("incognito-radio-enable-safety-delay").checked = false;
-	chrome.runtime.sendMessage({ name: "setOptions", safetyDelay: 0 });
-	document.dispatchEvent(new CustomEvent('onOptionsUpdate', 
-	{
-        detail: JSON.stringify({safetyDelay: 0})
-    }));
-}
-
-function onSafetyDelayEnabled()
-{
-	var delay = parseInt(document.getElementById("incognito-option-safety-delay").value);
-	if (isNaN(delay)) delay = parseInt(document.getElementById("incognito-option-safety-delay").placeholder)
-	document.getElementById("incognito-option-safety-delay").disabled = false;
-	document.getElementById("incognito-radio-disable-safety-delay").checked = false;
-	chrome.runtime.sendMessage({ name: "setOptions", safetyDelay: delay });
-	document.dispatchEvent(new CustomEvent('onOptionsUpdate', 
-	{
-        detail: JSON.stringify({safetyDelay: delay})
-    }));
-}
-
-function isSafetyDelayValid(string)
-{
-    var number = Math.floor(Number(string));
-    return (String(number) === string && number >= 1 && number <= 30) || string == ""
-}
 
 function checkInterception()
 {
 	if (!isInterceptionWorking)
 	{
-		sweetAlert("Oops...", "WhatsApp Web Incognito has detected that interception is not working. Please try refreshing this page, or, if the problem presists, writing back to the developer.", "error");
+		sweetAlert("Oops...", "WhatsApp Web Louis Plugin has detected that interception is not working. Please try refreshing this page, or, if the problem presists, writing back to the developer.", "error");
 		return false;
 	}
 	
 	return true;
-}
-
-function isNumberKey(evt)
-{
-    var charCode = (evt.which) ? evt.which : event.keyCode
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
-    return true;
 }
