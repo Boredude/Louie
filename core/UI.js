@@ -15,7 +15,7 @@ else
 	{
 		var mutationObserver = new MutationObserver(function (mutations)
 		{
-			var found = false;
+			var mainUiReady = false;
 			for (var i = 0; i < mutations.length; i++)
 			{
 				var addedNodes = mutations[i].addedNodes;
@@ -25,7 +25,7 @@ else
 					if (addedNode.nodeName.toLowerCase() == "div" && addedNode.classList.contains("app"))
 					{
 						setTimeout(function () { onMainUIReady(); }, 100);
-						found = true;
+						mainUiReady = true;
 						break;
 					}
 					else if (addedNode.nodeName.toLowerCase() == "div" && addedNode.classList.contains("_2hHc6"))
@@ -45,7 +45,7 @@ else
 						document.dispatchEvent(new CustomEvent('onPaneChatOpened', {}));
 					}
 				}
-				if (found) break;
+				if (mainUiReady) break;
 			}
 		});
 		mutationObserver.observe(appElem, { childList: true, subtree: true });
@@ -61,9 +61,41 @@ function onMainUIReady()
 	
 	// if the menu itme is gone somehow after a short period of time (e.g because the layout changes from right-to-left) add it again
     setTimeout(addIconIfNeeded, 500);
-    setTimeout(addIconIfNeeded, 1000);
+	setTimeout(addIconIfNeeded, 1000);
+	
+	listenToChatPanelChanges();
 }
 
+function listenToChatPanelChanges() {
+	// find chat panel element
+	const chatListElem = document.getElementsByClassName("_1H6CJ _1rqO1")[0];
+	if (chatListElem) {
+		var mutationObserver = new MutationObserver(function (mutations)
+		{
+			for (var i = 0; i < mutations.length; i++)
+			{
+				const mutation = mutations[i];
+
+				// if a new contact was loaded
+				if (mutation.type === "childList" &&
+					mutation.target.nodeName.toLowerCase() === "div" &&
+					mutation.target.classList.contains("_3H4MS") &&
+					mutation.addedNodes.length > 0) {
+					// TODO: find the name and add logo to it
+					//console.log(mutation.addedNodes[0].innerText);
+				} else if (mutation.type === "characterData" &&
+						   mutation.target.parentNode.parentNode.nodeName.toLowerCase() === "span" &&
+						   mutation.target.parentNode.parentNode.classList.contains("_3NWy8")) {
+					// TODO: find the name and add logo to it
+					console.log(mutation.target.data);
+				}
+			}
+		});
+		mutationObserver.observe(chatListElem, { childList: true, 
+												 characterData: true, 
+												 subtree: true });
+	}
+}
 
 function shouldAddStayInTouchOption() {
 	// get delete chat menu item
@@ -110,9 +142,23 @@ function addIconIfNeeded()
 		var menuItemElem = document.createElement("div");
 		menuItemElem.setAttribute("id", "louis-dropdown");
 		menuItemElem.setAttribute("class", "_3j8Pd menu-item-incognito");
+		
 		var iconElem = document.createElement("button");
 		iconElem.setAttribute("class", "icon icon-incognito");
-		iconElem.setAttribute("title", "Incognito options");
+		iconElem.setAttribute("title", "Stay in touch");
+		
+		// if we have urgencies 
+		if (window.urgencies && 
+			window.urgencies.count > 0) {
+			// add notification icon
+			var notificationElem = document.createElement("span");
+			notificationElem.setAttribute("class", "louis-notification");
+			// set number of pending urgencies
+			notificationElem.textContent = window.urgencies.count;
+			// append to icon element
+			iconElem.appendChild(notificationElem);
+		}
+
 		menuItemElem.appendChild(iconElem);
 		firstMenuItem.parentElement.insertBefore(menuItemElem, firstMenuItem);
 		
@@ -174,7 +220,9 @@ document.addEventListener('onChatsRecieved', function(e)
 	{
 		// set contacts if undefined
 		contacts = contacts || {};
-		const urgencies = {};
+		const urgencies = {
+			count: 0
+		};
 		// iterate all the stay in touch contacts
 		for (var jid in contacts) {
 			// if we have chat with this contact
@@ -193,6 +241,7 @@ document.addEventListener('onChatsRecieved', function(e)
 					} 
 					// set urgency
 					urgencies[urgency].push(contacts[jid]);
+					urgencies.count++;
 				}
 			}
 		}
@@ -374,6 +423,8 @@ function buildStayInTouchDropdownContent(urgencies) {
 
 	// iterate through the urgencies
 	for (urgency in urgencies) {
+		// skip the property count
+		if (urgency === "count") continue;
 		// foreach contacts in the urgency
 		for (contact of urgencies[urgency]) {
 			// add li to content
