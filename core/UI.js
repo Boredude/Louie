@@ -375,38 +375,51 @@ function calculateStayInTouchUrgency(lastTimestmap, nowTimestamp, schedule) {
 	// calculate every how many days we need to stay in touch 
 	const daysToStayInTouch = daysIn[schedule.frequency] / schedule.quantity;
 
-	// if more than 10 days have passed from the moment we needed to chat with contact, it's defined urgent
-	if (daysSinceLastChat - daysToStayInTouch >= 10) return "urgent";
-	// if 1 to 9 days have passed from the moment we needed to chat with contact, it's defined high
-	else if (daysSinceLastChat - daysToStayInTouch > 0 && daysSinceLastChat - daysToStayInTouch < 10) return "high";
-	// if less than 2 days have left until the moment we needed to chat with contact, it's defined medium
-	else if (daysToStayInTouch - daysSinceLastChat <= 2) return "medium";
-	// if between 2 to 5 days have left until the moment we needed to chat with contact, it's defined low
-	else if (daysToStayInTouch - daysSinceLastChat > 2 && daysToStayInTouch - daysSinceLastChat <=5) return "low";
-	// otherwise not urgent at all
-	else return "none";
+	// calculate the difference between the days we last chatted to the days we need to chat
+	const difference = daysSinceLastChat - daysToStayInTouch;
+
+	// if difference is positive meaning we haven't talked to the contact more time than we defined
+	if (difference > 0) {
+		// if more than 10 days have passed from the moment we needed to chat with contact, it's defined urgent
+		// if 1 to 9 days have passed from the moment we needed to chat with contact, it's defined high
+		return difference >= 10 ? "urgent" : "hight";
+	// if difference is negative meaning we haven't passed the time we defined
+	} else {
+		// if less than one day left until the moment we needed to chat with contact, it's defined medium
+		// if between 1 to 5 days left until the moment we needed to chat with contact, it's defined low
+		// otherwise not urgent at all
+		return difference >= -1 
+					 ? "medium" 
+					 : difference >= 5 ? "low"
+					 : "none";
+	}
 }
 
 
 function buildStayInTouchDropdownContent(urgencies) {
 	
-	let content = ' \
-	<div class="louis-dropdown-container"> \
-		<ul class="louis-dropdown-list">';
+	let content = '<div class="louis-dropdown-container">';
 
-	// iterate through the urgencies
-	for (urgency in urgencies) {
-		// skip the property count
-		if (urgency === "count") continue;
-		// foreach contacts in the urgency
-		for (contact of urgencies[urgency]) {
-			// add li to content
-			content += `<li class="louis-dropdown-item _3zy-4 Sl-9e urgency_${urgency}">${contact.formattedName}</li>`;
+	if (urgencies && urgencies.count > 0) {
+		content += '<ul class="louis-dropdown-list">';
+
+		// iterate through the urgencies
+		for (urgency in urgencies) {
+			// skip the property count
+			if (urgency === "count") continue;
+			// foreach contacts in the urgency
+			for (contact of urgencies[urgency]) {
+				// add li to content
+				content += `<li class="louis-dropdown-item _3zy-4 Sl-9e urgency_${urgency}">${contact.formattedName}</li>`;
+			}
 		}
+		
+		content += '</ul>';
+	} else {
+		content += '<div id="all-caught-up">You are all caught up! :)</div>'
 	}
-	
-	content += '</ul> \
-	</div>';
+
+	content += '</div>';
 
 	return content;
 }
@@ -457,7 +470,7 @@ function buildStayInTouchDialogContent(data, contacts) {
 					</div>';
 		} else {
 			content += ' \
-			<input type="radio" name="rdo" id="every" class="hidden" /> \
+			<input type="radio" name="rdo" id="every" class="hidden" checked /> \
 			<span class="label"></span> \
 			<div> \
 				<input type="number" id="quantity" name="quantity" min="1" max="30" step="1" value="1" /> \
