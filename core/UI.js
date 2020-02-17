@@ -413,17 +413,23 @@ function calculateStayInTouchUrgency(lastTimestmap, nowTimestamp, schedule) {
 	// if difference is positive meaning we haven't talked to the contact more time than we defined
 	if (difference > 0) {
 		// if more than 10 days have passed from the moment we needed to chat with contact, it's defined urgent
-		// if 1 to 9 days have passed from the moment we needed to chat with contact, it's defined high
-		return difference >= 10 ? "urgent" : "high";
+		if (difference >= 10) {
+			return "urgent";
+		}
+		// if 5 to 9 days have passed from the moment we needed to chat with contact, it's defined high
+		else if (difference >= 5) {
+			return "high";
+		}
+		// if 2 to 4 days have passed from the moment we needed to chat with contact, it's defined high
+		else if (difference >= 2) {
+			return "medium";
+		} else {
+			// if less than 2 days have passed from the moment we needed to chat with contact, it's defined high
+			return "low";
+		}
 	// if difference is negative meaning we haven't passed the time we defined
 	} else {
-		// if less than one day left until the moment we needed to chat with contact, it's defined medium
-		// if between 1 to 5 days left until the moment we needed to chat with contact, it's defined low
-		// otherwise not urgent at all
-		return difference >= -1 
-					 ? "medium" 
-					 : difference >= -5 ? "low"
-					 : "none";
+		return "none";
 	}
 }
 
