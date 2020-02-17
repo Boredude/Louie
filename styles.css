@@ -1,12 +1,12 @@
 
 /* CSS Document */
 
-.menu-item-louis
+.menu-item-louie
 {
     cursor: pointer !important;
 }
 
-.icon-louis
+.icon-louie
 {
   background-image: url(chrome-extension://__MSG_@@extension_id__/images/incognito_gray.svg) !important;
 	background-repeat: no-repeat;
@@ -17,7 +17,7 @@
 	height: 24px;
 }
 
-.louis-notification {
+.louie-notification {
   position: absolute;
   right: 4px;
   top: 0px;
@@ -40,22 +40,22 @@
 	transform-origin: left top 0px;
 }
 
-.louis-dropdown-container
+.louie-dropdown-container
 {
 }
 
-.louis-dropdown-list {
+.louie-dropdown-list {
   max-height: 120px;
   overflow: auto;
 }
 
-.louis-dropdown-item {
+.louie-dropdown-item {
   display: flex !important;
   align-items: center;
   justify-content: space-between;
 }
 
-.louis-dropdown-item:hover {
+.louie-dropdown-item:hover {
   background-color: #f5f5f5;
 }
 

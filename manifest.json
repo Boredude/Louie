@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Louis - Stay In Touch",
-  "short_name": "Louis",
-   "description": "Louis helps you stay in touch with your friends on Whatsapp",
+  "name": "Louie - Stay In Touch",
+  "short_name": "Louie",
+   "description": "Louie helps you stay in touch with your friends on Whatsapp",
   "version": "1.5.6",
   "permissions": [ "storage" ],
    "icons": 

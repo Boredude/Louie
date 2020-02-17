@@ -134,7 +134,7 @@ function addStayInTouchOption() {
 
 function addIconIfNeeded() 
 {
-	if (document.getElementsByClassName("menu-item-louis").length > 0) return; // already added
+	if (document.getElementsByClassName("menu-item-louie").length > 0) return; // already added
 	
 	// fetch contacts
 	chrome.runtime.sendMessage({ name: "getContacts" }, function (contacts) 
@@ -143,11 +143,11 @@ function addIconIfNeeded()
 		if (firstMenuItem != undefined)
 		{
 			var menuItemElem = document.createElement("div");
-			menuItemElem.setAttribute("id", "louis-dropdown");
-			menuItemElem.setAttribute("class", "_3j8Pd menu-item-louis");
+			menuItemElem.setAttribute("id", "louie-dropdown");
+			menuItemElem.setAttribute("class", "_3j8Pd menu-item-louie");
 			
 			var iconElem = document.createElement("button");
-			iconElem.setAttribute("class", "icon icon-louis");
+			iconElem.setAttribute("class", "icon icon-louie");
 			iconElem.setAttribute("title", "Stay in touch");
 			
 			// if we have urgencies 
@@ -155,7 +155,7 @@ function addIconIfNeeded()
 				window.urgencies.count > 0) {
 				// add notification icon
 				var notificationElem = document.createElement("span");
-				notificationElem.setAttribute("class", "louis-notification");
+				notificationElem.setAttribute("class", "louie-notification");
 				// set number of pending urgencies
 				notificationElem.textContent = window.urgencies.count;
 				// append to icon element
@@ -451,11 +451,11 @@ function buildStayInTouchDropdownContent(urgencies, contacts) {
 
 function buildStayInTouchDropdownNotificationContent(urgencies) {
 	
-	let content = '<div class="louis-dropdown-container">';
+	let content = '<div class="louie-dropdown-container">';
 
 	if (urgencies && urgencies.count > 0) {
 		
-		content += '<ul class="louis-dropdown-list">';
+		content += '<ul class="louie-dropdown-list">';
 
 		if (urgencies.hasOwnProperty("urgent")) {
 			content += buildNotificationItem(urgencies["urgent"], "urgent");
@@ -486,7 +486,7 @@ function buildNotificationItem(contacts, urgency) {
 	// foreach contacts in the urgency
 	for (contact of contacts) {
 		// add li to content
-		content += `<li class="louis-dropdown-item _3zy-4 Sl-9e urgency">
+		content += `<li class="louie-dropdown-item _3zy-4 Sl-9e urgency">
 						<h3>${contact.formattedName}</h3>
 						<span class="urgency_${urgency}">${urgency}</span>
 					</li>`;
@@ -497,10 +497,10 @@ function buildNotificationItem(contacts, urgency) {
 
 function buildStayInTouchDropdownContactsContent(contacts) {
 	
-	let content = '<div class="louis-dropdown-container">';
+	let content = '<div class="louie-dropdown-container">';
 	// if we have contacts defined
 	if (contacts && Object.entries(contacts).length > 0) {
-		content += '<ul class="louis-dropdown-list">';
+		content += '<ul class="louie-dropdown-list">';
 
 		// iterate through the contacts
 		for (jid in contacts) {
@@ -517,7 +517,7 @@ function buildStayInTouchDropdownContactsContent(contacts) {
 				quantity = contact.schedule.quantity;
 				frequency = `times a ${contact.schedule.frequency}`;
 			}
-			content += `<li class="louis-dropdown-item _3zy-4 Sl-9e contact" id="${jid}">
+			content += `<li class="louie-dropdown-item _3zy-4 Sl-9e contact" id="${jid}">
 							<h3>${contact.formattedName} ${quantity} ${frequency}</h3>
 						</li>`;
 		}
@@ -605,7 +605,7 @@ function checkInterception()
 {
 	if (!isInterceptionWorking)
 	{
-		sweetAlert("Oops...", "WhatsApp Web Louis Plugin has detected that interception is not working. Please try refreshing this page, or, if the problem presists, writing back to the developer.", "error");
+		sweetAlert("Oops...", "WhatsApp Web Louie Plugin has detected that interception is not working. Please try refreshing this page, or, if the problem presists, writing back to the developer.", "error");
 		return false;
 	}
 	

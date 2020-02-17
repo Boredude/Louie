@@ -1,11 +1,11 @@
-# Louis - Stay In Touch for WhatsApp Web
+# Louie - Stay In Touch for WhatsApp Web
 This is the source code of a chrome extension that lets you stay in touch with your friends & family on WhatsApp Web.
 You can find the original extension in [Chrome Web Store](https://chrome.google.com/webstore/detail/waincognito/alhmbbnlcggfcjjfihglopfopcbigmil) [Updated link to new item].
 
-<img src="https://raw.githubusercontent.com/boredude/Louis/master/promotion-transperent.png" >
+<img src="https://raw.githubusercontent.com/boredude/Louie/master/promotion-transperent.png" >
 
 ## Installing from GitHub directly
-To install the extension off-store, download the latest release as a zip file from the [Releases](https://github.com/boredude/Louis/releases) page, 
+To install the extension off-store, download the latest release as a zip file from the [Releases](https://github.com/boredude/Louie/releases) page, 
 **extract its content to a directory** and add it to Chrome using the 'Load unpacked extension' option when developer mode is turned on.
 
 ## How it works
