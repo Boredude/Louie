@@ -204,7 +204,6 @@ function addIconIfNeeded()
 			var originalCloseFunction = drop.close;
 			drop.close = function()
 			{
-				//document.dispatchEvent(new CustomEvent('onIncognitoOptionsClosed', {detail: null}));
 				setTimeout(function() {originalCloseFunction.apply(drop, arguments); }, 100);
 			}
 			drop.on("open", function()

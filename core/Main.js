@@ -34,7 +34,7 @@ wsHook.before = function(originalData, url)
 				if (isInitializing)
 				{
 					isInitializing = false;
-					console.log("WhatsIncognito: Interception is working.");
+					console.log("Louie: Interception is working.");
 					document.dispatchEvent(new CustomEvent('isInterceptionWorking', {detail: true}));
 				}
 				
@@ -252,7 +252,7 @@ function exposeWhatsAppAPI()
 						// find the web module
 						if (module.VERSION_STR)
 						{
-							console.log("WhatsIncognito: WhatsApp Web verison is " + module.VERSION_STR);
+							console.log("Louie: WhatsApp Web verison is " + module.VERSION_STR);
 						}
 					}
 				}
@@ -264,6 +264,6 @@ function exposeWhatsAppAPI()
 	
 	if (window.WhatsAppSeenAPI == undefined)
 	{
-		console.error("WhatsAppWebIncognito: Can't find the WhatsApp API. Sending read receipts might not work.");
+		console.error("Louie: Can't find the WhatsApp API. Sending read receipts might not work.");
 	}
 }
