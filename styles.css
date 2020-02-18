@@ -8,7 +8,7 @@
 
 .icon-louie
 {
-  background-image: url(chrome-extension://__MSG_@@extension_id__/images/incognito_gray.svg) !important;
+  background-image: url(chrome-extension://__MSG_@@extension_id__/images/Greyscale.svg) !important;
 	background-repeat: no-repeat;
   background-position: 1px 1px !important;
   background-size: 21px 21px !important;
@@ -124,12 +124,6 @@
 
 input[type=number]::-webkit-inner-spin-button {
   opacity: 1;
-}
-
-.seconds-incognito-input {
-	width: 40px;
-	margin-left: 7px;
-	margin-right: 7px;
 }
 
 body {
