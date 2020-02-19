@@ -1,5 +1,6 @@
 # Louie - Stay In Touch for WhatsApp Web
 This is the source code of a chrome extension that lets you stay in touch with your friends & family on WhatsApp Web.
+You can find the published extension in [Chrome Web Store](https://chrome.google.com/webstore/detail/louie-stay-in-touch/cimpomloljeebpnbiacgkclehbkecbhh).
 
 <img src="https://raw.githubusercontent.com/boredude/Louie/master/images/stay-in-touch-notifications.png" >
 
