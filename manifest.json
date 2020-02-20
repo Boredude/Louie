@@ -3,7 +3,7 @@
   "name": "Louie - Stay In Touch",
   "short_name": "Louie",
    "description": "Louie helps you stay in touch with your friends on Whatsapp",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "permissions": [ "storage" ],
    "icons": 
    {

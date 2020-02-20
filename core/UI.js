@@ -101,7 +101,7 @@ function shouldAddStayInTouchOption() {
 	// get delete chat menu item
 	const menuItemsCollection = document.getElementsByClassName('_3zy-4 Sl-9e');
 	const menuItemsArray = Array.from(menuItemsCollection);
-	const deleteChatMenuItem = menuItemsArray.find(item => item.title === 'Delete chat');
+	const deleteChatMenuItem = menuItemsArray.find(item => item.title === 'Delete chat' || item.title === "מחק צ'אט");
 	return deleteChatMenuItem;
 }
 
@@ -110,11 +110,14 @@ function addStayInTouchOption() {
 	var menuItems = document.getElementsByClassName("_3z3lc")[0].getElementsByClassName("_3cfBY ");
 	// get first menu item
 	var firstMenuItem = menuItems[0];
+
+	// set stay in touch text
+	let text = hasHebrewCharacters(firstMenuItem.innerText) ? 'שמור על קשר' : 'Stay in touch';
 	// copy it
 	var stayInTouchMenuItem = firstMenuItem.cloneNode(true);
 	// edit it
 	stayInTouchMenuItem.style = "opacity: 1";
-	stayInTouchMenuItem.innerHTML = '<div class="_3zy-4 Sl-9e" role="button" title="Stay in touch">Stay in touch</div>';
+	stayInTouchMenuItem.innerHTML = `<div class="_3zy-4 Sl-9e" role="button" title="${text}">${text}</div>`;
 	// add hover behavior
 	stayInTouchMenuItem.addEventListener('mouseenter', function (e) {
 		stayInTouchMenuItem.classList.add('_3VXiW');
@@ -529,7 +532,7 @@ function buildStayInTouchDropdownContactsContent(contacts) {
 		
 		content += '</ul>';
 	} else {
-		content += '<h3 id="all-caught-up">So who would you like to stay in touch with?</h3>'
+		content += '<h3 id="all-caught-up">Hover on a contact and click "Stay in Touch" from the dropdown menu</h3>'
 	}
 
 	content += '</div>';
@@ -615,4 +618,9 @@ function checkInterception()
 	}
 	
 	return true;
+}
+
+function hasHebrewCharacters(text) {
+	let position = text.search(/[\u0590-\u05FF]/);
+	return position >= 0;
 }
